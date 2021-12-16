@@ -4,7 +4,6 @@ namespace d3yii2\d3btl\models;
 
 use d3yii2\d3btl\models\base\BtlFileData as BaseBtlFileData;
 use d3yii2\d3btl\components\BTLFileParser;
-use yii\db\Exception;
 
 /**
  * This is the model class for table "btl_file_data".

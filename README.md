@@ -2,6 +2,11 @@
 
 ## Features
 
+Reads BTL files created by design2machine interface
+
+https://design2machine.com/btl/btl_v106.pdf 
+
+
 
 ## Installation
 
@@ -33,9 +38,12 @@ add to migration path
 ```
 
 
-## Methods
-
-
 ## Usage
 
-## Examples
+command add, reads files and saves their data in database
+
+```bash
+
+php yii btl/add path/to/file
+
+```
