@@ -4,6 +4,7 @@ namespace d3yii2\d3btl\models;
 
 use d3yii2\d3btl\models\base\BtlFileData as BaseBtlFileData;
 use d3yii2\d3btl\components\BTLFileParser;
+use yii\db\Exception;
 
 /**
  * This is the model class for table "btl_file_data".
@@ -67,9 +68,9 @@ class BtlFileData extends BaseBtlFileData
     public function saveWithParts()
     {
 
-       if (!parent::save()) {
-           return false;
-       }
+        if (!parent::save()) {
+            return false;
+        }
 
         foreach ($this->parts as $part) {
 
@@ -81,7 +82,7 @@ class BtlFileData extends BaseBtlFileData
             $btlPart->type = $part->type;
 
             $btlPart->single_member_number = (int)$partInfo['SINGLEMEMBERNUMBER'];
-            $btlPart->assembly_number = (int)$partInfo['ASSEMBLYNUMBER'] ;
+            $btlPart->assembly_number = (int)$partInfo['ASSEMBLYNUMBER'];
             $btlPart->order_number = $partInfo['ORDERNUMBER'];
             $btlPart->designation = $partInfo['DESIGNATION'];
             $btlPart->annotation = $partInfo['ANNOTATION'];
@@ -98,8 +99,9 @@ class BtlFileData extends BaseBtlFileData
             $btlPart->colour = $partInfo['COLOUR'];
             $btlPart->uid = $partInfo['UID'];
 
-            // need a save check
-            $btlPart->save();
+            if (!$btlPart->save()) {
+                return false;
+            }
         }
 
         return true;

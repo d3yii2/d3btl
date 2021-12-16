@@ -3,11 +3,13 @@
 namespace d3yii2\d3btl\commands;
 
 use d3yii2\d3btl\Module;
+use Exception;
 use yii\console\ExitCode;
 use yii\console\Controller;
 use d3yii2\d3btl\models\BtlFileData;
 use d3yii2\d3btl\models\BtlPart;
 use d3yii2\d3files\components\BTLFilePart;
+use Yii;
 
 /**
 * Class ProcessFileController* @property Module $module
@@ -28,10 +30,21 @@ class ProcessFileController extends Controller
         $model = new BtlFileData();
         $model->load(['file_data' => $fileText], '');
 
-        if ($model->saveWithParts()) {
-            $this->stdout($filename . '  saved!');
-        }
+        $transaction = Yii::$app->getDb()->beginTransaction();
 
+        try {
+            if ($model->saveWithParts()) {
+                $this->stdout($filename . '  saved!');
+                $transaction->commit();
+            } else {
+                $transaction->rollback();
+                $this->stdout($filename . ' could not be saved!');
+            }
+        } catch (Exception $e) {
+            $transaction->rollback();
+            $this->stdout($filename . ' could not be saved!');
+        }
+        
 
         return ExitCode::OK;
     }
