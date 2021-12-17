@@ -9,8 +9,6 @@ class Module extends D3Module
 {
     public $controllerNamespace = 'd3yii2/d3btl\controllers';
 
-    public $leftMenu = 'd3yii2/d3btl\LeftMenu';
-
     public function getLabel(): string
     {
         return Yii::t('d3btl','d3btl');

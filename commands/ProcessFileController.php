@@ -8,7 +8,6 @@ use yii\console\ExitCode;
 use yii\console\Controller;
 use d3yii2\d3btl\models\BtlFileData;
 use d3yii2\d3btl\models\BtlPart;
-use d3yii2\d3files\components\BTLFilePart;
 use Yii;
 
 /**
