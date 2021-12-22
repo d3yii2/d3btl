@@ -44,6 +44,6 @@ command add, reads files and saves their data in database
 
 ```bash
 
-php yii btl/add path/to/file
+php btl/process-file/add path/to/file
 
 ```

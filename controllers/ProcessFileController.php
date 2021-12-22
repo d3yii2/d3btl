@@ -1,22 +1,22 @@
 <?php
 
-namespace d3yii2\d3btl\commands;
+namespace d3yii2\d3btl\controllers;
 
+use d3system\commands\D3CommandController;
 use d3yii2\d3btl\Module;
 use Exception;
 use yii\console\ExitCode;
-use yii\console\Controller;
 use d3yii2\d3btl\models\BtlFileData;
-use d3yii2\d3btl\models\BtlPart;
 use Yii;
 
 /**
 * Class ProcessFileController* @property Module $module
 */
-class ProcessFileController extends Controller
+class ProcessFileController extends D3CommandController
 {
 
     /**
+     *
      * @param string $filename
      * @param string $notes
      * @return int
