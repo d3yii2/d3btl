@@ -27,7 +27,7 @@ class ProcessFileController extends Controller
         $fileText = file_get_contents($filename);
 
         $model = new BtlFileData();
-        $model->load(['file_data' => $fileText], '');
+        $model->load(['file_data' => $fileText, 'file_name' => $filename], '');
 
         $transaction = Yii::$app->getDb()->beginTransaction();
 

@@ -18,6 +18,7 @@ use d3system\behaviors\D3DateTimeBehavior;
  * @property string $notes
  * @property string $project_name
  * @property string $export_datetime
+ * @property string $file_name
  *
  * @property \d3yii2\d3btl\models\BtlPart[] $btlParts
  * @property string $aliasModel
@@ -70,7 +71,7 @@ abstract class BtlFileData extends \yii\db\ActiveRecord
             'integer Unsigned' => [['id'],'integer' ,'min' => 0 ,'max' => 4294967295],
             [['status', 'file_data', 'parsed_data'], 'string'],
             [['add_time', 'export_datetime'], 'safe'],
-            [['notes'], 'string', 'max' => 255],
+            [['notes', 'file_name'], 'string', 'max' => 255],
             [['project_name'], 'string', 'max' => 200],
             'D3DateTimeBehavior' => [['add_time_local','export_datetime_local'],'safe']
         ];
@@ -90,6 +91,7 @@ abstract class BtlFileData extends \yii\db\ActiveRecord
             'notes' => Yii::t('btl', 'Notes'),
             'project_name' => Yii::t('btl', 'Project Name'),
             'export_datetime' => Yii::t('btl', 'Export Datetime'),
+            'file_name' => Yii::t('btl', 'File Name'),
         ];
     }
 
