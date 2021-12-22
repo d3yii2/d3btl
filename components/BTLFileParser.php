@@ -4,8 +4,7 @@ namespace d3yii2\d3btl\components;
 
 class BTLFileParser
 {
-    // too specific for example file, need to handle PART loop with varied RAWPART
-    public const REGEX = '#GENERAL](?s)(.*)\[RAWPART](?s)(.*)\[PART](.*)\[PART](.*)#';
+    public const REGEX = '#(\[RAWPART])|(\[PART\])|(\[GENERAL])#';
 
     public const GENERAL = 'general';
     public const RAWPART = 'rawpart';
@@ -19,24 +18,28 @@ class BTLFileParser
     }
 
     /**
-     * @return array[]|null
+     * @return array[]
      */
     public function getParts()
     {
-        $matches = [];
+        $parts = [];
+        $splitText = preg_split(self::REGEX, $this->fileText, 0,PREG_SPLIT_DELIM_CAPTURE );
 
-        $result = preg_match(self::REGEX, $this->fileText, $matches);
+        foreach ($splitText as $key => $chunk) {
+            if ('[' . strtoupper(self::GENERAL) . ']' === $chunk) {
+                $parts[] = new BTLFilePart(self::GENERAL, $this->parseText($splitText[$key + 1]));
+            }
 
-        if (!$result) {
-                return null;
+            if ('[' . strtoupper(self::PART) . ']' === $chunk) {
+                $parts[] = new BTLFilePart(self::PART, $this->parseText($splitText[$key + 1]));
+            }
+
+            if ('[' . strtoupper(self::RAWPART) . ']' === $chunk) {
+                $parts[] = new BTLFilePart(self::RAWPART, $this->parseText($splitText[$key + 1]));
+            }
         }
 
-        return [ new BTLFilePart(self::GENERAL, $this->parseText($matches[1])),
-             new BTLFilePart(self::RAWPART, $this->parseText($matches[2])),
-             new BTLFilePart(self::PART, $this->parseText($matches[3])),
-             new BTLFilePart(self::PART, $this->parseText($matches[4])),
-        ];
-
+        return $parts;
     }
 
     /**
