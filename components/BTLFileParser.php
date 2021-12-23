@@ -2,6 +2,8 @@
 
 namespace d3yii2\d3btl\components;
 
+use d3yii2\d3btl\models\BtlProcess;
+
 class BTLFileParser
 {
     public const REGEX = '#(\[RAWPART])|(\[PART\])|(\[GENERAL])#';
@@ -27,15 +29,27 @@ class BTLFileParser
 
         foreach ($splitText as $key => $chunk) {
             if ('[' . strtoupper(self::GENERAL) . ']' === $chunk) {
-                $parts[] = new BTLFilePart(self::GENERAL, $this->parseText($splitText[$key + 1]));
+                $parts[] = new BTLFilePart(
+                    self::GENERAL,
+                    $this->parseText($splitText[$key + 1]),
+                    []
+                );
             }
 
             if ('[' . strtoupper(self::PART) . ']' === $chunk) {
-                $parts[] = new BTLFilePart(self::PART, $this->parseText($splitText[$key + 1]));
+                $parts[] = new BTLFilePart(
+                    self::PART,
+                    $this->parseText($splitText[$key + 1]),
+                    $this->parseProcessText($splitText[$key + 1])
+                );
             }
 
             if ('[' . strtoupper(self::RAWPART) . ']' === $chunk) {
-                $parts[] = new BTLFilePart(self::RAWPART, $this->parseText($splitText[$key + 1]));
+                $parts[] = new BTLFilePart(
+                    self::RAWPART,
+                    $this->parseText($splitText[$key + 1]),
+                    $this->parseProcessText($splitText[$key + 1])
+                );
             }
         }
 
@@ -63,4 +77,52 @@ class BTLFileParser
         return $parsedText;
     }
 
+    /**
+     * @param $text
+     * @return array
+     */
+    public function parseProcessText($text)
+    {
+
+        $textChunks = explode(PHP_EOL, $text);
+
+        $processes = [];
+
+        foreach ($textChunks as $key => $line) {
+            $valuePair = explode(': ', $line);
+
+            if (count($valuePair) > 1) {
+
+                switch ($valuePair[0]) {
+                    case 'PROCESSKEY':
+                        $btlProcess = new BtlProcess();
+                        // need to be more careful with exploding, so no need to glue back together
+                        $btlProcess->key = $valuePair[1];
+                        break;
+                    case 'PROCESSPARAMETERS':
+                        $btlProcess->parameters = $valuePair[1];
+                        break;
+                    case 'PROCESSIDENT':
+                        $btlProcess->ident = $valuePair[1];
+                        break;
+                    case 'PROCESSINGQUALITY':
+                        $btlProcess->quality = strtolower($valuePair[1]);
+                        break;
+                    case 'RECESS':
+                        $btlProcess->recess = strtolower($valuePair[1]);
+                        break;
+                    case 'COMMENT':
+                        $btlProcess->comment = $valuePair[1];
+                        $processes[] = $btlProcess;
+                        break;
+
+                }
+
+            }
+
+        }
+
+
+        return $processes;
+    }
 }

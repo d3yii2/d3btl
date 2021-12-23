@@ -97,8 +97,9 @@ class BtlFileData extends BaseBtlFileData
             $btlPart->width = $partInfo['WIDTH'];
             $btlPart->colour = $partInfo['COLOUR'];
             $btlPart->uid = $partInfo['UID'];
+            $btlPart->parsed_data = json_encode($partInfo);
 
-            if (!$btlPart->save()) {
+            if (!$btlPart->saveWithProcess($part->processes)) {
                 return false;
             }
         }
