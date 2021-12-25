@@ -4,25 +4,12 @@ namespace d3yii2\d3btl\models;
 
 use yii\base\Model;
 
+/**
+ * @todo jāekstendo no BtlPartProcess
+ * @see https://design2machine.com/btl/btl_v106.pdf page 47
+ */
 class ProcessLap4_030 extends Model
 {
-    /** @var string */
-    public $key;
-
-    /** @var int */
-    public $ident;
-
-    /** @var string */
-    public $quality;
-
-    /** @var string */
-    public $recess;
-
-    /** @var string */
-    public $comment;
-
-    /** @var string */
-    public $parameters;
 
     /** @var int Distance from beam start to the reference point */
     public $P01;
@@ -33,7 +20,9 @@ class ProcessLap4_030 extends Model
     /** @var int Displacement to the reference side */
     public $P03;
 
-    /** @var int Limit of the 6 faces of the lap, binary code */
+    /**
+     * @var int Limit of the 6 faces of the lap, binary code
+     */
     public $P04;
 
     /** @var int Angle to the reference edge in the reference side*/
@@ -66,9 +55,8 @@ class ProcessLap4_030 extends Model
     /**
      * @param string $parameters
      */
-    public function setParameters(string $parameters): void
+    public function loadParameters(string $parameters): void
     {
-        $this->parameters = $parameters;
         foreach(explode(' ', $parameters) as $parameter){
             [$parameterName, $parameterValue] = explode(':',$parameter);
             $this->$parameterName = $parameterValue;
