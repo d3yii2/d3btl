@@ -29,6 +29,7 @@ use Yii;
  * @property integer $width
  * @property string $colour
  * @property integer $uid
+ * @property string $parsed_data
  *
  * @property \d3yii2\d3btl\models\BtlFileData $fileData
  * @property string $aliasModel
@@ -64,7 +65,7 @@ abstract class BtlPart extends \yii\db\ActiveRecord
                 ]
             ],
             'integer Unsigned' => [['id','file_data_id','single_member_number','assembly_number','order_number','count','length','height','width','uid'],'integer' ,'min' => 0 ,'max' => 4294967295],
-            [['type'], 'string'],
+            [['type', 'parsed_data'], 'string'],
             [['designation', 'annotation', 'storey', 'material', 'group', 'package', 'timber_grade', 'quality_grade', 'colour'], 'string', 'max' => 200],
             [['file_data_id'], 'exist', 'skipOnError' => true, 'targetClass' => \d3yii2\d3btl\models\BtlFileData::className(), 'targetAttribute' => ['file_data_id' => 'id']]
         ];
@@ -96,6 +97,7 @@ abstract class BtlPart extends \yii\db\ActiveRecord
             'width' => Yii::t('btlfiles', 'Width'),
             'colour' => Yii::t('btlfiles', 'Colour'),
             'uid' => Yii::t('btlfiles', 'Uid'),
+            'parsed_data' => Yii::t('btl', 'Parsed Data'),
         ];
     }
 
