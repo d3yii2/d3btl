@@ -2,6 +2,7 @@
 
 namespace d3yii2\d3btl\models;
 
+use d3system\exceptions\D3ActiveRecordException;
 use d3yii2\d3btl\models\base\BtlFileData as BaseBtlFileData;
 use d3yii2\d3btl\components\BTLFileParser;
 
@@ -41,13 +42,13 @@ class BtlFileData extends BaseBtlFileData
     /**
      * @return array()
      */
-    public function parseFile()
+    public function parseFile(): array
     {
         $parser = new BTLFileParser($this->file_data);
 
         $parsedData = $parser->getParts();
         $this->parsed_data = json_encode($parsedData);
-
+        $generalInfo = [];
         foreach ($parsedData as $part) {
 
             if (BTLFileParser::GENERAL === $part->type) {
@@ -63,8 +64,9 @@ class BtlFileData extends BaseBtlFileData
 
     /**
      * @return bool
+     * @throws \d3system\exceptions\D3ActiveRecordException
      */
-    public function saveWithParts()
+    public function saveWithParts(): bool
     {
 
         if (!parent::save()) {
@@ -78,7 +80,7 @@ class BtlFileData extends BaseBtlFileData
             $btlPart = new BtlPart();
 
             $btlPart->file_data_id = $this->id;
-            $btlPart->type = $part->type;
+            $btlPart->type = strtolower($part->type);
 
             $btlPart->single_member_number = (int)$partInfo['SINGLEMEMBERNUMBER'];
             $btlPart->assembly_number = (int)$partInfo['ASSEMBLYNUMBER'];
@@ -98,10 +100,10 @@ class BtlFileData extends BaseBtlFileData
             $btlPart->colour = $partInfo['COLOUR'];
             $btlPart->uid = $partInfo['UID'];
             $btlPart->parsed_data = json_encode($partInfo);
-
-            if (!$btlPart->saveWithProcess($part->processes)) {
-                return false;
+            if (!$btlPart->save()) {
+                throw new D3ActiveRecordException($btlPart);
             }
+            $btlPart->saveWithProcess($part->processes);
         }
 
         return true;

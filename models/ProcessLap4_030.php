@@ -88,4 +88,9 @@ class ProcessLap4_030 extends Model
     {
         return (bool)($this->P04 & 32);
     }
+
+    public function isFullHeight(): bool
+    {
+        return $this->isP04bit5() && $this->isP04bit6();
+    }
 }

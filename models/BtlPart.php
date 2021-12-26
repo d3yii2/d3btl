@@ -2,8 +2,8 @@
 
 namespace d3yii2\d3btl\models;
 
+use d3system\exceptions\D3ActiveRecordException;
 use d3yii2\d3btl\models\base\BtlPart as BaseBtlPart;
-use d3yii2\d3btl\models\BtlProcess;
 
 /**
  * This is the model class for table "btl_part".
@@ -11,24 +11,18 @@ use d3yii2\d3btl\models\BtlProcess;
 class BtlPart extends BaseBtlPart
 {
 
-
     /**
-     * @return bool
+     * @return void
+     * @throws \d3system\exceptions\D3ActiveRecordException
      */
-    public function saveWithProcess($processes)
+    public function saveWithProcess($processes): void
     {
-
-        if (!parent::save()) {
-            return false;
-        }
-
-
         foreach ($processes as $btlProcess) {
             $btlProcess->part_id = $this->id;
-            $btlProcess->save();
+            if (!$btlProcess->save()){
+                throw new D3ActiveRecordException($btlProcess);
+            }
         }
-
-        return true;
     }
 
 }

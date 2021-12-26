@@ -83,15 +83,15 @@ abstract class BtlFileData extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('btlfiles', 'ID'),
-            'status' => Yii::t('btlfiles', 'Status'),
-            'file_data' => Yii::t('btlfiles', 'File Data'),
-            'parsed_data' => Yii::t('btlfiles', 'Parsed Data'),
-            'add_time' => Yii::t('btlfiles', 'Add Time'),
-            'notes' => Yii::t('btlfiles', 'Notes'),
-            'project_name' => Yii::t('btlfiles', 'Project Name'),
-            'export_datetime' => Yii::t('btlfiles', 'Export Datetime'),
-            'file_name' => Yii::t('btlfiles', 'File Name'),
+            'id' => Yii::t('d3btl', 'ID'),
+            'status' => Yii::t('d3btl', 'Status'),
+            'file_data' => Yii::t('d3btl', 'File Data'),
+            'parsed_data' => Yii::t('d3btl', 'Parsed Data'),
+            'add_time' => Yii::t('d3btl', 'Add Time'),
+            'notes' => Yii::t('d3btl', 'Notes'),
+            'project_name' => Yii::t('d3btl', 'Project Name'),
+            'export_datetime' => Yii::t('d3btl', 'Export Datetime'),
+            'file_name' => Yii::t('d3btl', 'File Name'),
         ];
     }
 
@@ -127,9 +127,9 @@ abstract class BtlFileData extends \yii\db\ActiveRecord
     public static function optsStatus(): array
     {
         return [
-            self::STATUS_PROCESSED => Yii::t('btlfiles', 'processed'),
-            self::STATUS_ERROR => Yii::t('btlfiles', 'error'),
-            self::STATUS_DELETED => Yii::t('btlfiles', 'deleted'),
+            self::STATUS_PROCESSED => Yii::t('d3btl', 'processed'),
+            self::STATUS_ERROR => Yii::t('d3btl', 'error'),
+            self::STATUS_DELETED => Yii::t('d3btl', 'deleted'),
         ];
     }
     /**

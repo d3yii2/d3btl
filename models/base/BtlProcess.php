@@ -74,14 +74,14 @@ abstract class BtlProcess extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('btl', 'ID'),
-            'part_id' => Yii::t('btl', 'Part ID'),
-            'key' => Yii::t('btl', 'Key'),
-            'parameters' => Yii::t('btl', 'Parameters'),
-            'ident' => Yii::t('btl', 'Ident'),
-            'quality' => Yii::t('btl', 'Quality'),
-            'recess' => Yii::t('btl', 'Recess'),
-            'comment' => Yii::t('btl', 'Comment'),
+            'id' => Yii::t('d3btl', 'ID'),
+            'part_id' => Yii::t('d3btl', 'Part ID'),
+            'key' => Yii::t('d3btl', 'Key'),
+            'parameters' => Yii::t('d3btl', 'Parameters'),
+            'ident' => Yii::t('d3btl', 'Ident'),
+            'quality' => Yii::t('d3btl', 'Quality'),
+            'recess' => Yii::t('d3btl', 'Recess'),
+            'comment' => Yii::t('d3btl', 'Comment'),
         ];
     }
 
@@ -117,9 +117,9 @@ abstract class BtlProcess extends \yii\db\ActiveRecord
     public static function optsQuality(): array
     {
         return [
-            self::QUALITY_AUTOMATIC => Yii::t('btl', 'automatic'),
-            self::QUALITY_VISIBLE => Yii::t('btl', 'visible'),
-            self::QUALITY_FAST => Yii::t('btl', 'fast'),
+            self::QUALITY_AUTOMATIC => Yii::t('d3btl', 'automatic'),
+            self::QUALITY_VISIBLE => Yii::t('d3btl', 'visible'),
+            self::QUALITY_FAST => Yii::t('d3btl', 'fast'),
         ];
     }
 
@@ -144,8 +144,8 @@ abstract class BtlProcess extends \yii\db\ActiveRecord
     public static function optsRecess(): array
     {
         return [
-            self::RECESS_AUTOMATIC => Yii::t('btl', 'automatic'),
-            self::RECESS_MANUAL => Yii::t('btl', 'manual'),
+            self::RECESS_AUTOMATIC => Yii::t('d3btl', 'automatic'),
+            self::RECESS_MANUAL => Yii::t('d3btl', 'manual'),
         ];
     }
     /**
@@ -226,4 +226,5 @@ abstract class BtlProcess extends \yii\db\ActiveRecord
     {
         $this->recess = self::RECESS_MANUAL;
     }
+
 }

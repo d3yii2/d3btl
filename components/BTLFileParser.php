@@ -6,11 +6,13 @@ use d3yii2\d3btl\models\BtlProcess;
 
 class BTLFileParser
 {
-    public const REGEX = '#(\[RAWPART])|(\[PART\])|(\[GENERAL])#';
+    public const GENERAL = 'GENERAL';
+    public const RAWPART = 'RAWPART';
+    public const PART = 'PART';
 
-    public const GENERAL = 'general';
-    public const RAWPART = 'rawpart';
-    public const PART = 'part';
+    public const REGEX = '#(\['.self::GENERAL.'])|(\['.self::RAWPART.'\])|(\['.self::PART.'])#';
+
+
 
     private $fileText;
 
@@ -20,37 +22,34 @@ class BTLFileParser
     }
 
     /**
-     * @return array[]
+     * @return BTLFilePart[]
      */
-    public function getParts()
+    public function getParts(): array
     {
         $parts = [];
         $splitText = preg_split(self::REGEX, $this->fileText, 0,PREG_SPLIT_DELIM_CAPTURE );
 
         foreach ($splitText as $key => $chunk) {
-            if ('[' . strtoupper(self::GENERAL) . ']' === $chunk) {
-                $parts[] = new BTLFilePart(
-                    self::GENERAL,
-                    $this->parseText($splitText[$key + 1]),
-                    []
-                );
+            $chunk = trim($chunk,'[]');
+            switch ($chunk) {
+                case self::GENERAL:
+                    $parts[] = new BTLFilePart(
+                        self::GENERAL,
+                        $this->parseText($splitText[$key + 1]),
+                        []
+                    );
+
+                    break;
+                case self::PART:
+                case self::RAWPART:
+                    $parts[] = new BTLFilePart(
+                        $chunk,
+                        $this->parseText($splitText[$key + 1]),
+                        $this->parseProcessText($splitText[$key + 1])
+                    );
+                    break;
             }
 
-            if ('[' . strtoupper(self::PART) . ']' === $chunk) {
-                $parts[] = new BTLFilePart(
-                    self::PART,
-                    $this->parseText($splitText[$key + 1]),
-                    $this->parseProcessText($splitText[$key + 1])
-                );
-            }
-
-            if ('[' . strtoupper(self::RAWPART) . ']' === $chunk) {
-                $parts[] = new BTLFilePart(
-                    self::RAWPART,
-                    $this->parseText($splitText[$key + 1]),
-                    $this->parseProcessText($splitText[$key + 1])
-                );
-            }
         }
 
         return $parts;
@@ -60,7 +59,7 @@ class BTLFileParser
      * @param string $text
      * @return array
      */
-    public function parseText($text)
+    public function parseText(string $text): array
     {
         $parsedText = [];
 
@@ -70,7 +69,7 @@ class BTLFileParser
             $valuePair = explode(': ', $chunk);
 
             if (count($valuePair) === 2) {
-                $parsedText[$valuePair[0]] = $valuePair[1];
+                $parsedText[$valuePair[0]] = trim($valuePair[1],'"');
             }
         }
 
@@ -81,14 +80,14 @@ class BTLFileParser
      * @param $text
      * @return array
      */
-    public function parseProcessText($text)
+    public function parseProcessText($text): array
     {
 
         $textChunks = explode(PHP_EOL, $text);
 
         $processes = [];
 
-        foreach ($textChunks as $key => $line) {
+        foreach ($textChunks as $line) {
             $valuePair = explode(': ', $line);
 
             if (count($valuePair) > 1) {
@@ -112,7 +111,7 @@ class BTLFileParser
                         $btlProcess->recess = strtolower($valuePair[1]);
                         break;
                     case 'COMMENT':
-                        $btlProcess->comment = $valuePair[1];
+                        $btlProcess->comment = trim($valuePair[1], '"');
                         $processes[] = $btlProcess;
                         break;
 

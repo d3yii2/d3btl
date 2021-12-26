@@ -31,6 +31,7 @@ use Yii;
  * @property integer $uid
  * @property string $parsed_data
  *
+ * @property \d3yii2\d3btl\models\BtlProcess[] $btlProcesses
  * @property \d3yii2\d3btl\models\BtlFileData $fileData
  * @property string $aliasModel
  */
@@ -77,28 +78,36 @@ abstract class BtlPart extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('btlfiles', 'ID'),
-            'file_data_id' => Yii::t('btlfiles', 'File Data ID'),
-            'type' => Yii::t('btlfiles', 'Type'),
-            'single_member_number' => Yii::t('btlfiles', 'Single Member Number'),
-            'assembly_number' => Yii::t('btlfiles', 'Assembly Number'),
-            'order_number' => Yii::t('btlfiles', 'Order Number'),
-            'designation' => Yii::t('btlfiles', 'Designation'),
-            'annotation' => Yii::t('btlfiles', 'Annotation'),
-            'storey' => Yii::t('btlfiles', 'Storey'),
-            'material' => Yii::t('btlfiles', 'Material'),
-            'group' => Yii::t('btlfiles', 'Group'),
-            'package' => Yii::t('btlfiles', 'Package'),
-            'timber_grade' => Yii::t('btlfiles', 'Timber Grade'),
-            'quality_grade' => Yii::t('btlfiles', 'Quality Grade'),
-            'count' => Yii::t('btlfiles', 'Count'),
-            'length' => Yii::t('btlfiles', 'Length'),
-            'height' => Yii::t('btlfiles', 'Height'),
-            'width' => Yii::t('btlfiles', 'Width'),
-            'colour' => Yii::t('btlfiles', 'Colour'),
-            'uid' => Yii::t('btlfiles', 'Uid'),
-            'parsed_data' => Yii::t('btl', 'Parsed Data'),
+            'id' => Yii::t('d3btl', 'ID'),
+            'file_data_id' => Yii::t('d3btl', 'File Data ID'),
+            'type' => Yii::t('d3btl', 'Type'),
+            'single_member_number' => Yii::t('d3btl', 'Single Member Number'),
+            'assembly_number' => Yii::t('d3btl', 'Assembly Number'),
+            'order_number' => Yii::t('d3btl', 'Order Number'),
+            'designation' => Yii::t('d3btl', 'Designation'),
+            'annotation' => Yii::t('d3btl', 'Annotation'),
+            'storey' => Yii::t('d3btl', 'Storey'),
+            'material' => Yii::t('d3btl', 'Material'),
+            'group' => Yii::t('d3btl', 'Group'),
+            'package' => Yii::t('d3btl', 'Package'),
+            'timber_grade' => Yii::t('d3btl', 'Timber Grade'),
+            'quality_grade' => Yii::t('d3btl', 'Quality Grade'),
+            'count' => Yii::t('d3btl', 'Count'),
+            'length' => Yii::t('d3btl', 'Length'),
+            'height' => Yii::t('d3btl', 'Height'),
+            'width' => Yii::t('d3btl', 'Width'),
+            'colour' => Yii::t('d3btl', 'Colour'),
+            'uid' => Yii::t('d3btl', 'Uid'),
+            'parsed_data' => Yii::t('d3btl', 'Parsed Data'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBtlProcesses()
+    {
+        return $this->hasMany(\d3yii2\d3btl\models\BtlProcess::className(), ['part_id' => 'id'])->inverseOf('part');
     }
 
     /**
@@ -106,7 +115,7 @@ abstract class BtlPart extends \yii\db\ActiveRecord
      */
     public function getFileData()
     {
-        return $this->hasOne(\poker\sharkability\models\BtlFileData::className(), ['id' => 'file_data_id']);
+        return $this->hasOne(\d3yii2\d3btl\models\BtlFileData::className(), ['id' => 'file_data_id'])->inverseOf('btlParts');
     }
 
 
@@ -133,8 +142,8 @@ abstract class BtlPart extends \yii\db\ActiveRecord
     public static function optsType(): array
     {
         return [
-            self::TYPE_RAWPART => Yii::t('btlfiles', 'rawpart'),
-            self::TYPE_PART => Yii::t('btlfiles', 'part'),
+            self::TYPE_RAWPART => Yii::t('d3btl', 'rawpart'),
+            self::TYPE_PART => Yii::t('d3btl', 'part'),
         ];
     }
     /**
