@@ -30,7 +30,7 @@ class BtlFileData extends BaseBtlFileData
             $this->add_time = date('Y-m-d H:i:s');
             $this->project_name = $generalInfo['PROJECTNAME'];
 
-            $dateTime = str_replace('\\', ' ', $generalInfo['EXPORTDATE'] . $generalInfo['EXPORTTIME']);
+            $dateTime = str_replace('\\', ' ', $generalInfo['EXPORTDATE'] . ' ' . $generalInfo['EXPORTTIME']);
             $dateTime = str_replace('"', ' ', $dateTime);
 
             $this->export_datetime = $dateTime;
@@ -99,7 +99,7 @@ class BtlFileData extends BaseBtlFileData
             $btlPart->width = $partInfo['WIDTH'];
             $btlPart->colour = $partInfo['COLOUR'];
             $btlPart->uid = $partInfo['UID'];
-            $btlPart->parsed_data = json_encode($partInfo);
+            $btlPart->parsed_data = json_encode(array_merge($partInfo, $part->processes));
             if (!$btlPart->save()) {
                 throw new D3ActiveRecordException($btlPart);
             }

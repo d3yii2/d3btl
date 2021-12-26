@@ -47,3 +47,7 @@ command add, reads files and saves their data in database
 php btl/process-file/add path/to/file
 
 ```
+
+
+![data structure](doc/img.png)
+
