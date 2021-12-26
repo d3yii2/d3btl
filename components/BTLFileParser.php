@@ -66,12 +66,23 @@ class BTLFileParser
         $textChunks = explode(PHP_EOL, $text);
 
         foreach ($textChunks as $chunk) {
-            $valuePair = explode(': ', $chunk);
+            $valuePair = explode(': ', $chunk, 2);
 
-            if (count($valuePair) === 2) {
-                $parsedText[$valuePair[0]] = trim($valuePair[1],'"');
+            if (count($valuePair) > 1) {
+
+                list($key, $value)  = $valuePair;
+
+                // going for 2d array
+                if (str_contains($value, ': ')) {
+
+                    list($key2, $value2) = explode(': ', $value, 2);
+                    $parsedText[array_shift($valuePair)] = [$key2 => $value2];
+                } else {
+                    $parsedText[array_shift($valuePair)] = $valuePair[0];
+                }
             }
         }
+
 
         return $parsedText;
     }
@@ -88,30 +99,30 @@ class BTLFileParser
         $processes = [];
 
         foreach ($textChunks as $line) {
-            $valuePair = explode(': ', $line);
+            $valuePair = explode(': ', $line, 2);
 
             if (count($valuePair) > 1) {
 
-                switch ($valuePair[0]) {
+                list($key, $value)  = $valuePair;
+                switch ($key) {
                     case 'PROCESSKEY':
                         $btlProcess = new BtlProcess();
-                        // need to be more careful with exploding, so no need to glue back together
-                        $btlProcess->key = $valuePair[1];
+                        $btlProcess->key = $value;
                         break;
                     case 'PROCESSPARAMETERS':
-                        $btlProcess->parameters = $valuePair[1];
+                        $btlProcess->parameters = $value;
                         break;
                     case 'PROCESSIDENT':
-                        $btlProcess->ident = $valuePair[1];
+                        $btlProcess->ident = $value;
                         break;
                     case 'PROCESSINGQUALITY':
-                        $btlProcess->quality = strtolower($valuePair[1]);
+                        $btlProcess->quality = strtolower($value);
                         break;
                     case 'RECESS':
-                        $btlProcess->recess = strtolower($valuePair[1]);
+                        $btlProcess->recess = strtolower($value);
                         break;
                     case 'COMMENT':
-                        $btlProcess->comment = trim($valuePair[1], '"');
+                        $btlProcess->comment = trim($value, '"');
                         $processes[] = $btlProcess;
                         break;
 
