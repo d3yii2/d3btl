@@ -110,10 +110,10 @@ class BTLFileParser
 
                         if (str_contains($value, ': ')) {
                             list($key2, $value2) = explode(': ', $value, 2);
-                            $btlProcess->key = $key2;
+                            $btlProcess->key = substr($key2, 0,20);
                             $btlProcess->designation = $value2;
                         } else {
-                            $btlProcess->key = $value;
+                            $btlProcess->key = substr($value, 0,20);
                         }
 
                         break;
