@@ -65,28 +65,28 @@ class ProcessLap4_030 extends Model
 
     public function isP04bit1(): bool
     {
-        return (bool)($this->P04 & 1);
+        return (bool)($this->P04/100 & 1);
     }
 
     public function isP04bit2(): bool
     {
-        return (bool)($this->P04 & 2);
+        return (bool)($this->P04/100 & 2);
     }
     public function isP04bit3(): bool
     {
-        return (bool)($this->P04 & 4);
+        return (bool)($this->P04/100 & 4);
     }
     public function isP04bit4(): bool
     {
-        return (bool)($this->P04 & 8);
+        return (bool)($this->P04/100 & 8);
     }
     public function isP04bit5(): bool
     {
-        return (bool)($this->P04 & 16);
+        return (bool)($this->P04/100 & 16);
     }
     public function isP04bit6(): bool
     {
-        return (bool)($this->P04 & 32);
+        return (bool)($this->P04/100 & 32);
     }
 
     public function isFullHeight(): bool
