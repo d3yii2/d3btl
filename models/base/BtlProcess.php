@@ -12,6 +12,7 @@ use Yii;
  * @property integer $id
  * @property integer $part_id
  * @property string $key
+ * @property string $designation
  * @property string $parameters
  * @property integer $ident
  * @property string $quality
@@ -63,7 +64,7 @@ abstract class BtlProcess extends \yii\db\ActiveRecord
             'smallint Signed' => [['ident'],'integer' ,'min' => -32768 ,'max' => 32767],
             'integer Unsigned' => [['id','part_id'],'integer' ,'min' => 0 ,'max' => 4294967295],
             [['parameters', 'quality', 'recess', 'comment'], 'string'],
-            [['key'], 'string', 'max' => 20],
+            [['key', 'designation'], 'string', 'max' => 20],
             [['part_id'], 'exist', 'skipOnError' => true, 'targetClass' => \d3yii2\d3btl\models\BtlPart::className(), 'targetAttribute' => ['part_id' => 'id']]
         ];
     }
@@ -77,6 +78,7 @@ abstract class BtlProcess extends \yii\db\ActiveRecord
             'id' => Yii::t('d3btl', 'ID'),
             'part_id' => Yii::t('d3btl', 'Part ID'),
             'key' => Yii::t('d3btl', 'Key'),
+            'designation' => Yii::t('btl', 'Designation'),
             'parameters' => Yii::t('d3btl', 'Parameters'),
             'ident' => Yii::t('d3btl', 'Ident'),
             'quality' => Yii::t('d3btl', 'Quality'),

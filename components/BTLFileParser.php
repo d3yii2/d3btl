@@ -107,7 +107,15 @@ class BTLFileParser
                 switch ($key) {
                     case 'PROCESSKEY':
                         $btlProcess = new BtlProcess();
-                        $btlProcess->key = $value;
+
+                        if (str_contains($value, ': ')) {
+                            list($key2, $value2) = explode(': ', $value, 2);
+                            $btlProcess->key = $key2;
+                            $btlProcess->designation = $value2;
+                        } else {
+                            $btlProcess->key = $value;
+                        }
+
                         break;
                     case 'PROCESSPARAMETERS':
                         $btlProcess->parameters = $value;
