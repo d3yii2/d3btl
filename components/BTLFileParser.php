@@ -107,7 +107,7 @@ class BTLFileParser
                 switch ($key) {
                     case 'PROCESSKEY':
                         $btlProcess = new BtlProcess();
-                        $btlProcess->key = $value;
+                        $btlProcess->key = substr($value, 0,20);
                         break;
                     case 'PROCESSPARAMETERS':
                         $btlProcess->parameters = $value;
