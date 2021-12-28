@@ -50,8 +50,8 @@ class BtlPart extends BaseBtlPart
 
     public function getSize(): string
     {
-        return $this->getLength()
-            . ' X ' . $this->getHeight()
+        return $this->getHeight()
+            . ' X ' . $this->getLength()
             . ' X ' . $this->getWidth();
     }
 
