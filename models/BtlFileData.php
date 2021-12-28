@@ -111,4 +111,12 @@ class BtlFileData extends BaseBtlFileData
         return true;
     }
 
+    public function delete()
+    {
+        foreach ($this->btlParts as $part) {
+            $part->delete();
+        }
+        return parent::delete();
+    }
+
 }

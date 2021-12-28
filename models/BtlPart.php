@@ -55,4 +55,11 @@ class BtlPart extends BaseBtlPart
             . ' X ' . $this->getWidth();
     }
 
+    public function delete()
+    {
+        foreach ($this->btlProcesses as $process) {
+            $process->delete();
+        }
+        return parent::delete();
+    }
 }
