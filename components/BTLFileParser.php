@@ -78,9 +78,9 @@ class BTLFileParser
                 if (str_contains($value, ': ')) {
 
                     [$key2, $value2] = explode(': ', $value, 2);
-                    $parsedText[array_shift($valuePair)] = [$key2 => trim(trim($value2,'"'))];
+                    $parsedText[array_shift($valuePair)] = [$key2 => trim(trim($value2,"\" \n\r\t\v\0"))];
                 } else {
-                    $parsedText[array_shift($valuePair)] = trim(trim($valuePair[0], '"'));
+                    $parsedText[array_shift($valuePair)] = trim(trim($valuePair[0], "\" \n\r\t\v\0"));
                 }
             }
         }
@@ -109,6 +109,7 @@ class BTLFileParser
             if (count($valuePair) > 1) {
 
                 [$key, $value] = $valuePair;
+                $value = trim($value);
                 switch ($key) {
                     case 'PROCESSKEY':
                         if (str_contains($value, ': ')) {
@@ -133,7 +134,7 @@ class BTLFileParser
                         $btlProcess->recess = strtolower($value);
                         break;
                     case 'COMMENT':
-                        $btlProcess->comment = trim($value, '"');
+                        $btlProcess->comment = trim($value, "\" \n\r\t\v\0");
                         $processes[] = $btlProcess;
                         $btlProcess = null;
                         break;
