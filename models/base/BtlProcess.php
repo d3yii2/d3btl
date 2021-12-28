@@ -78,7 +78,7 @@ abstract class BtlProcess extends \yii\db\ActiveRecord
             'id' => Yii::t('d3btl', 'ID'),
             'part_id' => Yii::t('d3btl', 'Part ID'),
             'key' => Yii::t('d3btl', 'Key'),
-            'designation' => Yii::t('btl', 'Designation'),
+            'designation' => Yii::t('d3btl', 'Designation'),
             'parameters' => Yii::t('d3btl', 'Parameters'),
             'ident' => Yii::t('d3btl', 'Ident'),
             'quality' => Yii::t('d3btl', 'Quality'),
