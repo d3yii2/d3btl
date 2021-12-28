@@ -30,8 +30,10 @@ class BtlFileData extends BaseBtlFileData
             $this->add_time = date('Y-m-d H:i:s');
             $this->project_name = $generalInfo['PROJECTNAME'];
 
-            $dateTime = str_replace('\\', ' ', $generalInfo['EXPORTDATE'] . ' ' . $generalInfo['EXPORTTIME']);
-            $dateTime = str_replace('"', ' ', $dateTime);
+            $dateTime = str_replace(
+                ['\\', '"'],
+                ' ',
+                $generalInfo['EXPORTDATE'] . ' ' . $generalInfo['EXPORTTIME']);
 
             $this->export_datetime = $dateTime;
         }
@@ -69,7 +71,7 @@ class BtlFileData extends BaseBtlFileData
     public function saveWithParts(): bool
     {
 
-        if (!parent::save()) {
+        if (!$this->save()) {
             return false;
         }
 

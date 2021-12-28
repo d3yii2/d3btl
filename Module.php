@@ -11,7 +11,7 @@ class Module extends D3Module
 
     public function getLabel(): string
     {
-        return Yii::t('d3btl','d3btl');
+        return Yii::t('d3btl','D3 BTL');
     }
 
 }

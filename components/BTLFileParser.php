@@ -22,6 +22,7 @@ class BTLFileParser
     }
 
     /**
+     * get file parts GENERAL, RAWPART and PART
      * @return BTLFilePart[]
      */
     public function getParts(): array
@@ -56,6 +57,7 @@ class BTLFileParser
     }
 
     /**
+     * process part data
      * @param string $text
      * @return array
      */
@@ -70,24 +72,24 @@ class BTLFileParser
 
             if (count($valuePair) > 1) {
 
-                list($key, $value)  = $valuePair;
+                [, $value] = $valuePair;
 
                 // going for 2d array
                 if (str_contains($value, ': ')) {
 
-                    list($key2, $value2) = explode(': ', $value, 2);
-                    $parsedText[array_shift($valuePair)] = [$key2 => $value2];
+                    [$key2, $value2] = explode(': ', $value, 2);
+                    $parsedText[array_shift($valuePair)] = [$key2 => trim($value2,'"')];
                 } else {
-                    $parsedText[array_shift($valuePair)] = $valuePair[0];
+                    $parsedText[array_shift($valuePair)] = trim($valuePair[0], '"');
                 }
             }
         }
-
 
         return $parsedText;
     }
 
     /**
+     * read process data
      * @param $text
      * @return array
      */
@@ -97,19 +99,20 @@ class BTLFileParser
         $textChunks = explode(PHP_EOL, $text);
 
         $processes = [];
-
+        $btlProcess = null;
         foreach ($textChunks as $line) {
+            if (!$btlProcess) {
+                $btlProcess = new BtlProcess();
+            }
             $valuePair = explode(': ', $line, 2);
 
             if (count($valuePair) > 1) {
 
-                list($key, $value)  = $valuePair;
+                [$key, $value] = $valuePair;
                 switch ($key) {
                     case 'PROCESSKEY':
-                        $btlProcess = new BtlProcess();
-
                         if (str_contains($value, ': ')) {
-                            list($key2, $value2) = explode(': ', $value, 2);
+                            [$key2, $value2] = explode(': ', $value, 2);
                             $btlProcess->key = substr($key2, 0,20);
                             $btlProcess->designation = $value2;
                         } else {
@@ -132,6 +135,7 @@ class BTLFileParser
                     case 'COMMENT':
                         $btlProcess->comment = trim($value, '"');
                         $processes[] = $btlProcess;
+                        $btlProcess = null;
                         break;
 
                 }
@@ -139,7 +143,6 @@ class BTLFileParser
             }
 
         }
-
 
         return $processes;
     }

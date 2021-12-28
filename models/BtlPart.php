@@ -48,7 +48,7 @@ class BtlPart extends BaseBtlPart
         return $this->getPartDataFieldValue('WIDTH')/100;
     }
 
-    public function getSize()
+    public function getSize(): string
     {
         return $this->getLength()
             . ' X ' . $this->getHeight()

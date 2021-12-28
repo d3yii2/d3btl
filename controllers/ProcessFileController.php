@@ -18,17 +18,17 @@ class ProcessFileController extends D3CommandController
     /**
      *
      * @param string $filename
-     * @param string $notes
+     * @param string|null $notes
      * @return int
      */
-    public function actionAdd($filename, $notes = null): int
+    public function actionAdd(string $filename, string $notes = null): int
     {
 
         $fileText = file_get_contents($filename);
 
         $model = new BtlFileData();
         $model->load(['file_data' => $fileText, 'file_name' => $filename], '');
-
+        $model->notes = $notes;
         $transaction = Yii::$app->getDb()->beginTransaction();
 
         try {
@@ -43,10 +43,7 @@ class ProcessFileController extends D3CommandController
             $transaction->rollback();
             $this->stdout($filename . ' could not be saved!');
         }
-        
-
         return ExitCode::OK;
     }
-
 }
 
