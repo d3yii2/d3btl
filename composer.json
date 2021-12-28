@@ -6,7 +6,9 @@
     "authors": [
         {
             "name": "Janis Vilums",
-            "email": "viljums@gmail.com"
+            "email": "viljums@gmail.com",
+            "name": "Uldis Nelsons",
+            "email": "uldis@nelsons.lv",            
         }
     ],
     "require": {
