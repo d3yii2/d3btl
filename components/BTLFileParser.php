@@ -78,9 +78,9 @@ class BTLFileParser
                 if (str_contains($value, ': ')) {
 
                     [$key2, $value2] = explode(': ', $value, 2);
-                    $parsedText[array_shift($valuePair)] = [$key2 => trim($value2,'"')];
+                    $parsedText[array_shift($valuePair)] = [$key2 => trim(trim($value2,'"'))];
                 } else {
-                    $parsedText[array_shift($valuePair)] = trim($valuePair[0], '"');
+                    $parsedText[array_shift($valuePair)] = trim(trim($valuePair[0], '"'));
                 }
             }
         }
