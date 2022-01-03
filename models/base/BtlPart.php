@@ -29,7 +29,7 @@ use Yii;
  * @property integer $width
  * @property string $colour
  * @property integer $uid
- * @property string $parsed_data
+ * @property string $raw_data
  *
  * @property \d3yii2\d3btl\models\BtlProcess[] $btlProcesses
  * @property \d3yii2\d3btl\models\BtlFileData $fileData
@@ -66,7 +66,7 @@ abstract class BtlPart extends \yii\db\ActiveRecord
                 ]
             ],
             'integer Unsigned' => [['id','file_data_id','single_member_number','assembly_number','order_number','count','length','height','width','uid'],'integer' ,'min' => 0 ,'max' => 4294967295],
-            [['type', 'parsed_data'], 'string'],
+            [['type', 'raw_data'], 'string'],
             [['designation', 'annotation', 'storey', 'material', 'group', 'package', 'timber_grade', 'quality_grade', 'colour'], 'string', 'max' => 200],
             [['file_data_id'], 'exist', 'skipOnError' => true, 'targetClass' => \d3yii2\d3btl\models\BtlFileData::className(), 'targetAttribute' => ['file_data_id' => 'id']]
         ];
@@ -98,7 +98,7 @@ abstract class BtlPart extends \yii\db\ActiveRecord
             'width' => Yii::t('d3btl', 'Width'),
             'colour' => Yii::t('d3btl', 'Colour'),
             'uid' => Yii::t('d3btl', 'Uid'),
-            'parsed_data' => Yii::t('d3btl', 'Parsed Data'),
+            'raw_data' => Yii::t('d3btl', 'Parsed Data'),
         ];
     }
 

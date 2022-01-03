@@ -27,25 +27,19 @@ class BtlPart extends BaseBtlPart
         }
     }
 
-    public function getPartDataFieldValue(string $field)
-    {
-        $data = Json::decode($this->parsed_data);
-        return $data[$field] ?? null;
-    }
-
     public function getLength()
     {
-        return $this->getPartDataFieldValue('LENGTH')/100;
+        return round($this->length/100);
     }
 
     public function getHeight()
     {
-        return $this->getPartDataFieldValue('HEIGHT')/100;
+        return round($this->height/100);
     }
 
     public function getWidth()
     {
-        return $this->getPartDataFieldValue('WIDTH')/100;
+        return round($this->width/100);
     }
 
     public function getSize(): string

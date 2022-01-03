@@ -75,6 +75,9 @@ class BtlFileData extends BaseBtlFileData
             return false;
         }
 
+        /**
+         * @var \d3yii2\d3btl\components\BTLFilePart $part
+         */
         foreach ($this->parts as $part) {
 
             $partInfo = $part->parsedText;
@@ -101,7 +104,7 @@ class BtlFileData extends BaseBtlFileData
             $btlPart->width = $partInfo['WIDTH'];
             $btlPart->colour = $partInfo['COLOUR'];
             $btlPart->uid = $partInfo['UID'];
-            $btlPart->parsed_data = json_encode(array_merge($partInfo, $part->processes));
+            $btlPart->raw_data = $part->rawData;
             if (!$btlPart->save()) {
                 throw new D3ActiveRecordException($btlPart);
             }

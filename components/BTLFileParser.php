@@ -34,21 +34,20 @@ class BTLFileParser
             $chunk = trim($chunk,'[]');
             switch ($chunk) {
                 case self::GENERAL:
-                    $parts[] = new BTLFilePart(
+                    $part = new BTLFilePart(
                         self::GENERAL,
-                        $this->parseText($splitText[$key + 1]),
-                        []
+                        $splitText[$key + 1]
                     );
-
+                    $parts[] = $part->parseText();
                     break;
                 case self::PART:
                 case self::RAWPART:
-                    $parts[] = new BTLFilePart(
+                    $part = new BTLFilePart(
                         $chunk,
-                        $this->parseText($splitText[$key + 1]),
-                        $this->parseProcessText($splitText[$key + 1])
+                        $splitText[$key + 1]
                     );
-                    break;
+                $parts[] = $part->parseText()->parseProcessText();
+                break;
             }
 
         }
@@ -56,95 +55,4 @@ class BTLFileParser
         return $parts;
     }
 
-    /**
-     * process part data
-     * @param string $text
-     * @return array
-     */
-    public function parseText(string $text): array
-    {
-        $parsedText = [];
-
-        $textChunks = explode(PHP_EOL, $text);
-
-        foreach ($textChunks as $chunk) {
-            $valuePair = explode(': ', $chunk, 2);
-
-            if (count($valuePair) > 1) {
-
-                [, $value] = $valuePair;
-
-                // going for 2d array
-                if (str_contains($value, ': ')) {
-
-                    [$key2, $value2] = explode(': ', $value, 2);
-                    $parsedText[array_shift($valuePair)] = [$key2 => trim(trim($value2,"\" \n\r\t\v\0"))];
-                } else {
-                    $parsedText[array_shift($valuePair)] = trim(trim($valuePair[0], "\" \n\r\t\v\0"));
-                }
-            }
-        }
-
-        return $parsedText;
-    }
-
-    /**
-     * read process data
-     * @param $text
-     * @return array
-     */
-    public function parseProcessText($text): array
-    {
-
-        $textChunks = explode(PHP_EOL, $text);
-
-        $processes = [];
-        $btlProcess = null;
-        foreach ($textChunks as $line) {
-            if (!$btlProcess) {
-                $btlProcess = new BtlProcess();
-            }
-            $valuePair = explode(': ', $line, 2);
-
-            if (count($valuePair) > 1) {
-
-                [$key, $value] = $valuePair;
-                $value = trim($value);
-                switch ($key) {
-                    case 'PROCESSKEY':
-                        if (str_contains($value, ': ')) {
-                            [$key2, $value2] = explode(': ', $value, 2);
-                            $btlProcess->key = substr($key2, 0,20);
-                            $btlProcess->designation = $value2;
-                        } else {
-                            $btlProcess->key = substr($value, 0,20);
-                        }
-
-                        break;
-                    case 'PROCESSPARAMETERS':
-                        $btlProcess->parameters = $value;
-                        break;
-                    case 'PROCESSIDENT':
-                        $btlProcess->ident = $value;
-                        break;
-                    case 'PROCESSINGQUALITY':
-                        $btlProcess->quality = strtolower($value);
-                        break;
-                    case 'RECESS':
-                        $btlProcess->recess = strtolower($value);
-                        break;
-                    case 'COMMENT':
-                        $btlProcess->comment = trim($value, "\" \n\r\t\v\0");
-                        $processes[] = $btlProcess;
-                        $btlProcess = null;
-                        break;
-
-                }
-
-            }
-
-        }
-
-        return $processes;
-    }
 }
