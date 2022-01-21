@@ -17,11 +17,6 @@ class BTLFilePart
     public $processes;
 
     /**
-     * @var array
-     */
-    public $parsedText;
-
-    /**
      * @var string
      */
     public $rawData;
@@ -32,38 +27,40 @@ class BTLFilePart
         $this->rawData = $rawData;
     }
 
+    public function getParsedText(): array
+    {
+        return self::parseText($this->rawData);
+    }
 
     /**
      * process part data
-     * @return $this
+     * @param string $rawData
+     * @return array
      */
-    public function parseText(): BTLFilePart
+    public static function parseText(string $rawData): array
     {
         $parsedText = [];
 
-        $textChunks = explode(PHP_EOL, $this->rawData);
+        $textChunks = explode(PHP_EOL, $rawData);
 
         foreach ($textChunks as $chunk) {
             $valuePair = explode(': ', $chunk, 2);
 
             if (count($valuePair) > 1) {
 
-                [, $value] = $valuePair;
+                [$name, $value] = $valuePair;
 
                 // going for 2d array
                 if (str_contains($value, ': ')) {
-
-                    [$key2, $value2] = explode(': ', $value, 2);
-                    $parsedText[array_shift($valuePair)] = [$key2 => trim(trim($value2,"\" \n\r\t\v\0"))];
+                    [$name2, $value] = explode(': ', $value, 2);
+                    $parsedText[$name][$name2] = trim(trim($value,"\" \n\r\t\v\0"));
                 } else {
-                    $parsedText[array_shift($valuePair)] = trim(trim($valuePair[0], "\" \n\r\t\v\0"));
+                    $parsedText[$name] = trim(trim($value,"\" \n\r\t\v\0"));
                 }
             }
         }
 
-        $this->parsedText = $parsedText;
-
-        return $this;
+        return $parsedText;
     }
 
     /**

@@ -2,8 +2,6 @@
 
 namespace d3yii2\d3btl\components;
 
-use d3yii2\d3btl\models\BtlProcess;
-
 class BTLFileParser
 {
     public const GENERAL = 'GENERAL';
@@ -32,24 +30,26 @@ class BTLFileParser
 
         foreach ($splitText as $key => $chunk) {
             $chunk = trim($chunk,'[]');
+            if (!$rawData = $splitText[$key + 1]??false) {
+                continue;
+            }
             switch ($chunk) {
                 case self::GENERAL:
                     $part = new BTLFilePart(
                         self::GENERAL,
-                        $splitText[$key + 1]
+                        $rawData
                     );
-                    $parts[] = $part->parseText();
+                    $parts[] = $part->parseProcessText();
                     break;
                 case self::PART:
                 case self::RAWPART:
                     $part = new BTLFilePart(
                         $chunk,
-                        $splitText[$key + 1]
+                        $rawData
                     );
-                $parts[] = $part->parseText()->parseProcessText();
-                break;
+                    $parts[] = $part->parseProcessText();
+                    break;
             }
-
         }
 
         return $parts;

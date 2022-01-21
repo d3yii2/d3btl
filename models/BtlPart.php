@@ -3,8 +3,8 @@
 namespace d3yii2\d3btl\models;
 
 use d3system\exceptions\D3ActiveRecordException;
+use d3yii2\d3btl\components\BTLFilePart;
 use d3yii2\d3btl\models\base\BtlPart as BaseBtlPart;
-use yii\helpers\Json;
 
 /**
  * This is the model class for table "btl_part".
@@ -27,17 +27,17 @@ class BtlPart extends BaseBtlPart
         }
     }
 
-    public function getLength()
+    public function getLength(): float
     {
         return round($this->length/100);
     }
 
-    public function getHeight()
+    public function getHeight(): float
     {
         return round($this->height/100);
     }
 
-    public function getWidth()
+    public function getWidth(): float
     {
         return round($this->width/100);
     }
@@ -56,4 +56,15 @@ class BtlPart extends BaseBtlPart
         }
         return parent::delete();
     }
+
+    public function getUserAttributes(): array
+    {
+        $data = BTLFilePart::parseText($this->raw_data)['USERATTRIBUTE']??[];
+        foreach ($data as $name => $value) {
+            unset($data[$name]);
+            $data[trim($name,'"')] = $value;
+        }
+        return $data;
+    }
+
 }

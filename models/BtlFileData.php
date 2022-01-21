@@ -5,6 +5,7 @@ namespace d3yii2\d3btl\models;
 use d3system\exceptions\D3ActiveRecordException;
 use d3yii2\d3btl\models\base\BtlFileData as BaseBtlFileData;
 use d3yii2\d3btl\components\BTLFileParser;
+use yii\helpers\Json;
 
 /**
  * This is the model class for table "btl_file_data".
@@ -49,12 +50,12 @@ class BtlFileData extends BaseBtlFileData
         $parser = new BTLFileParser($this->file_data);
 
         $parsedData = $parser->getParts();
-        $this->parsed_data = json_encode($parsedData);
+        $this->parsed_data =  Json::encode($parsedData);
         $generalInfo = [];
         foreach ($parsedData as $part) {
 
             if (BTLFileParser::GENERAL === $part->type) {
-                $generalInfo = $part->parsedText;
+                $generalInfo = $part->getParsedText();
                 continue;
             }
 
@@ -80,7 +81,7 @@ class BtlFileData extends BaseBtlFileData
          */
         foreach ($this->parts as $part) {
 
-            $partInfo = $part->parsedText;
+            $partInfo = $part->getParsedText();
 
             $btlPart = new BtlPart();
 
