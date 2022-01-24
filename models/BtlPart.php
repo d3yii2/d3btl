@@ -57,6 +57,11 @@ class BtlPart extends BaseBtlPart
         return parent::delete();
     }
 
+    public function getUserAttribute(string $name)
+    {
+        return $this->getUserAttributes()[$name]??null;
+    }
+
     public function getUserAttributes(): array
     {
         $data = BTLFilePart::parseText($this->raw_data)['USERATTRIBUTE']??[];
