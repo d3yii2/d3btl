@@ -11,6 +11,10 @@ use d3yii2\d3btl\models\base\BtlPart as BaseBtlPart;
  */
 class BtlPart extends BaseBtlPart
 {
+    /**
+     * @var array
+     */
+    private $_parsedData;
 
     /**
      * @param $processes
@@ -70,6 +74,19 @@ class BtlPart extends BaseBtlPart
             $data[trim($name,'"')] = $value;
         }
         return $data;
+    }
+
+    public function getParsedData(): array
+    {
+        if ($this->_parsedData) {
+            return $this->_parsedData;
+        }
+        return $this->_parsedData = BTLFilePart::parseText($this->raw_data);
+    }
+
+    public function getPartAttribute(string $name): ?string
+    {
+        return $this->getParsedData()[$name]??null;
     }
 
 }
