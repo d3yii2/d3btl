@@ -105,12 +105,28 @@ class BtlFileData extends BaseBtlFileData
             $btlPart->width = $partInfo['WIDTH'];
             $btlPart->colour = $partInfo['COLOUR'];
             $btlPart->uid = $partInfo['UID'];
+            $btlPart->timbergrade = $partInfo['TIMBERGRADE']??null;
             $btlPart->raw_data = $part->rawData;
             if (!$btlPart->save()) {
                 throw new D3ActiveRecordException($btlPart);
             }
             $btlPart->saveWithProcess($part->processes);
         }
+
+        foreach($this->btlParts as $part) {
+            if ($part->isTypePart()) {
+                continue;
+            }
+            BtlPart::updateAll(
+                ['master_part_id' => $part->id],
+                [
+                    'file_data_id' => $part->file_data_id,
+                    'type' => BtlPart::TYPE_PART,
+                    'timbergrade' => $part->single_member_number
+                ]
+            );
+        }
+        $this->refresh();
 
         return true;
     }

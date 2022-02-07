@@ -11,6 +11,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $file_data_id
+ * @property integer $master_part_id
  * @property string $type
  * @property integer $single_member_number
  * @property integer $assembly_number
@@ -30,9 +31,12 @@ use Yii;
  * @property string $colour
  * @property integer $uid
  * @property string $raw_data
+ * @property string $timbergrade
  *
+ * @property \d3yii2\d3btl\models\BtlPart[] $btlParts
  * @property \d3yii2\d3btl\models\BtlProcess[] $btlProcesses
  * @property \d3yii2\d3btl\models\BtlFileData $fileData
+ * @property \d3yii2\d3btl\models\BtlPart $masterPart
  * @property string $aliasModel
  */
 abstract class BtlPart extends \yii\db\ActiveRecord
@@ -65,10 +69,12 @@ abstract class BtlPart extends \yii\db\ActiveRecord
                     self::TYPE_PART,
                 ]
             ],
-            'integer Unsigned' => [['id','file_data_id','single_member_number','assembly_number','order_number','count','length','height','width','uid'],'integer' ,'min' => 0 ,'max' => 4294967295],
+            'integer Unsigned' => [['id','file_data_id','master_part_id','single_member_number','assembly_number','order_number','count','length','height','width','uid'],'integer' ,'min' => 0 ,'max' => 4294967295],
             [['type', 'raw_data'], 'string'],
             [['designation', 'annotation', 'storey', 'material', 'group', 'package', 'timber_grade', 'quality_grade', 'colour'], 'string', 'max' => 200],
-            [['file_data_id'], 'exist', 'skipOnError' => true, 'targetClass' => \d3yii2\d3btl\models\BtlFileData::className(), 'targetAttribute' => ['file_data_id' => 'id']]
+            [['timbergrade'], 'string', 'max' => 256],
+            [['file_data_id'], 'exist', 'skipOnError' => true, 'targetClass' => \d3yii2\d3btl\models\BtlFileData::className(), 'targetAttribute' => ['file_data_id' => 'id']],
+            [['master_part_id'], 'exist', 'skipOnError' => true, 'targetClass' => \d3yii2\d3btl\models\BtlPart::className(), 'targetAttribute' => ['master_part_id' => 'id']]
         ];
     }
 
@@ -80,6 +86,7 @@ abstract class BtlPart extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('d3btl', 'ID'),
             'file_data_id' => Yii::t('d3btl', 'File Data ID'),
+            'master_part_id' => Yii::t('d3btl', 'Master part'),
             'type' => Yii::t('d3btl', 'Type'),
             'single_member_number' => Yii::t('d3btl', 'Single Member Number'),
             'assembly_number' => Yii::t('d3btl', 'Assembly Number'),
@@ -99,7 +106,26 @@ abstract class BtlPart extends \yii\db\ActiveRecord
             'colour' => Yii::t('d3btl', 'Colour'),
             'uid' => Yii::t('d3btl', 'Uid'),
             'raw_data' => Yii::t('d3btl', 'Parsed Data'),
+            'timbergrade' => Yii::t('d3btl', 'Timbergrade'),
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeHints(): array
+    {
+        return array_merge(parent::attributeHints(), [
+            'master_part_id' => Yii::t('d3btl', 'Master part'),
+        ]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBtlParts()
+    {
+        return $this->hasMany(\d3yii2\d3btl\models\BtlPart::className(), ['master_part_id' => 'id'])->inverseOf('masterPart');
     }
 
     /**
@@ -116,6 +142,14 @@ abstract class BtlPart extends \yii\db\ActiveRecord
     public function getFileData()
     {
         return $this->hasOne(\d3yii2\d3btl\models\BtlFileData::className(), ['id' => 'file_data_id'])->inverseOf('btlParts');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMasterPart()
+    {
+        return $this->hasOne(\d3yii2\d3btl\models\BtlPart::className(), ['id' => 'master_part_id'])->inverseOf('btlParts');
     }
 
 
