@@ -14,6 +14,11 @@ class m220204_103208_d3yii2_d3btl_file_data_encoding_to_utf8  extends Migration 
               CHANGE `file_name` `file_name` VARCHAR (255) CHARSET utf8 NULL;
         ');
         $this->execute('
+            ALTER TABLE `btl_file_data`
+              CHANGE `file_data` `file_data` CHARSET utf8 LONGTEXT NULL,
+              CHANGE `parsed_data` `parsed_data` CHARSET utf8 LONGTEXT NULL;
+        ');
+        $this->execute('
         ALTER TABLE `btl_part`
             CHANGE `raw_data` `raw_data` TEXT CHARSET utf8 NULL,
             ADD COLUMN `master_part_id` INT UNSIGNED NULL COMMENT \'Master part\' AFTER `file_data_id`,
@@ -24,6 +29,14 @@ class m220204_103208_d3yii2_d3btl_file_data_encoding_to_utf8  extends Migration 
         ALTER TABLE `btl_part`
             CHANGE `raw_data` `raw_data` TEXT CHARSET utf8 NULL,
             ADD CONSTRAINT `fk_file_part_master` FOREIGN KEY (`master_part_id`) REFERENCES `btl_part` (`id`);        
+        ');
+        $this->execute('
+            ALTER TABLE `btl_process`
+              CHANGE `key` `key` CHAR(20) CHARSET utf8 NULL,
+              CHANGE `designation` `designation` CHAR(20) CHARSET utf8 NULL,
+              CHANGE `parameters` `parameters` TEXT CHARSET utf8 NULL,
+              CHANGE `comment` `comment` TEXT CHARSET utf8 NULL;
+        
         ');
     }
 
