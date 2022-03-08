@@ -89,4 +89,28 @@ class BtlPart extends BaseBtlPart
         return $this->getParsedData()[$name]??null;
     }
 
+    public function getUserAttrMasters()
+    {
+        return $this->getUserAttribute('Masters');
+    }
+
+    /**
+     * @return array [0=>'mastaer spec', 1=>height,2=> C/L, 4=>layersCnt, 5=> V/N, 5 => V/N]
+     */
+    public function getUserAttrMastersDetails(): array
+    {
+        if (!preg_match(
+            '#^CLT_(\d+)_([CL])(\d+)_([VN])\/([VN])$#',
+            $this->getUserAttribute('Masters'),
+            $match
+        )) {
+            return [];
+        }
+        return $match;
+    }
+
+    public function getCL()
+    {
+        return $this->getUserAttrMastersDetails()[2]??null;
+    }
 }
